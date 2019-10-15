@@ -15,5 +15,21 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
     if (err) throw err;
     console.log("Connected as id: " + connection.threadId);
-    // startPrompt();
+     startPrompt();
 });
+
+// create prompt to begin running the app
+function startPrompt() {
+    inquirer.prompt([{
+        type: "confirm",
+        name: "confirm",
+        message: "Would you like to take a look at out inventory?",
+        default: true
+    }]).then(function(user) {
+        if (user.confirm === true) {
+            inventory();
+        } else {
+            console.log("Okay, come back soon.");
+        }
+    });
+}
