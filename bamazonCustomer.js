@@ -33,3 +33,13 @@ function startPrompt() {
         }
     });
 }
+
+// function to display inventory tot the user
+function inventory() {
+    // create table for inventory
+    var table = new Table({
+        head: ['Id', 'Item', "Department", "Price", "Quantity"],
+        colWidths: [10, 40, 40, 40, 40,]
+    });
+    showInventory();
+}
