@@ -34,7 +34,7 @@ function startPrompt() {
     });
 }
 
-// function to display inventory tot the user
+// function to display inventory to the user
 function inventory() {
     // create table for inventory
     var table = new Table({
@@ -74,13 +74,54 @@ function continuePrompt() {
     inquirer.prompt([{
         type: "confirm",
         name: "continue",
-        message: "Would you like to purchase an item from out inventory?",
+        message: "Would you like to purchase an item from our inventory?",
         default: true
     }]).then(function(user) {
-        if (user.confirm === true) {
-             buyPrompt();
+        if (user.continue === true) {
+            buyPrompt();
         } else {
             console.log("Okay, come back soon.");
         }
     });
 }
+
+function buyPrompt() {
+    inquirer.prompt([{
+        type: "input",
+        name: "inputId",
+        message: "Please enter the ID number of the item you would liuke to purchase.",
+    },
+    {
+        type: "input",
+        name: "inputNumber",
+        message: "How many units would you like to purchase?",
+    
+    }]) .then(function(userPurchase) {
+        // check database to see if that product is in stock
+        // if user wants to purchase more than is in stock, decline the purchase
+        // and send them a message
+        connection.query("SELECT * FROM products WHERE item_id=?" , userPurchase.inputId, function(err, res) {
+            for (var i = 0; i < res.length; i++) {
+                if (userPurchase.inputNumber > res[i].stock_quantity) {
+                    console.log("Sorry, we do not have enough in stock. Try again at a different time.");
+                    startPrompt();
+                } else {
+                    console.log("Order fulfilled.");
+                    console.log("==================================================");
+                    console.log("You selected: " + res[i].product_name);
+                    console.log("Department: " + res[i].department_name);
+                    console.log("Price: " + res[i].price);
+                    console.log("Quantity: " + userPurchase.inputNumber);
+                    console.log("Total: " + res[i].price * userPurchase.inputNumber);
+                    console.log("==================================================");
+
+                    var updateStock = (res[i].stock_quantity - userPurchase.inputNumber);
+                    var purchase_id = (userPurchase.inputId);
+                    console.log(updateStock);
+                    // confirmPrompt(updateStock, purchase_id);
+                }
+            }
+        });
+    });
+}
+
