@@ -58,7 +58,7 @@ function inventory() {
                 table.push([item_id, product_name, department_name, price, stock_quantity]);
             }
             console.log("");
-            console.log("====================================================== Current Bamazon Inventory ======================================================");
+            console.log("----------------------------------------Current Bamazon Inventory ------------------------------------------");
             console.log("");
             console.log(table.toString());
             console.log("");
@@ -89,7 +89,7 @@ function buyPrompt() {
     inquirer.prompt([{
         type: "input",
         name: "inputId",
-        message: "Please enter the ID number of the item you would liuke to purchase.",
+        message: "Please enter the ID number of the item you would like to purchase.",
     },
     {
         type: "input",
@@ -107,21 +107,48 @@ function buyPrompt() {
                     startPrompt();
                 } else {
                     console.log("Order fulfilled.");
-                    console.log("==================================================");
+                    console.log("--------------------------------------------------");
                     console.log("You selected: " + res[i].product_name);
                     console.log("Department: " + res[i].department_name);
                     console.log("Price: " + res[i].price);
                     console.log("Quantity: " + userPurchase.inputNumber);
                     console.log("Total: " + res[i].price * userPurchase.inputNumber);
-                    console.log("==================================================");
+                    console.log("--------------------------------------------------");
 
                     var updateStock = (res[i].stock_quantity - userPurchase.inputNumber);
                     var purchase_id = (userPurchase.inputId);
                     console.log(updateStock);
-                    // confirmPrompt(updateStock, purchase_id);
+                    confirmPurchase(updateStock, purchase_id);
                 }
             }
         });
     });
 }
+
+function confirmPurchase(updateStock, purchase_id) {
+    inquirer.prompt([{
+        type: "confirm",
+        name: "confirmPurchase",
+        message: "Would you like to purchase this item and quantity",
+        default: true
+    }]).then(function(userConfirm) {
+        if (userConfirm.confirmPurchase === true) {
+            // if true, update mysql with new stock level
+            connection.query("UPDATE products SET ? WHERE ?", [{
+                stock_quantity: updateStock },
+                {
+                   item_id: purchase_id 
+                }], function(err, res) {});
+                console.log("--------------------------------------");
+                console.log("Transaction Complete!");
+                console.log("--------------------------------------");
+                startPrompt();
+            } else {
+                console.log("--------------------------------------");
+                console.log("Sorry, come back soon.");
+                console.log("--------------------------------------");
+                startPrompt();
+            }
+        });
+    }
 
