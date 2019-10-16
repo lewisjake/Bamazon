@@ -44,6 +44,8 @@ function inventory() {
     showInventory();
 
     // grab table from mysql and display to user
+    // after the table is displayed, run a function to see if they would like to
+    // buy anything
     function showInventory() {
         connection.query("SELECT * FROM products", function(err, res) {
             for (var i = 0; i < res.length; i++) {
@@ -60,7 +62,25 @@ function inventory() {
             console.log("");
             console.log(table.toString());
             console.log("");
-            // continuePrompt();
+             continuePrompt();
         });
     }
+}
+
+// create function to continue the prompt with user to see if they would
+// like to purchase anything from the inventory. give an option for the user to
+// buy if they would like.
+function continuePrompt() {
+    inquirer.prompt([{
+        type: "confirm",
+        name: "continue",
+        message: "Would you like to purchase an item from out inventory?",
+        default: true
+    }]).then(function(user) {
+        if (user.confirm === true) {
+             buyPrompt();
+        } else {
+            console.log("Okay, come back soon.");
+        }
+    });
 }
