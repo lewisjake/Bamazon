@@ -1,5 +1,5 @@
 // require variables
-var table = require("cli-table");
+var Table = require("cli-table");
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
@@ -42,4 +42,25 @@ function inventory() {
         colWidths: [10, 40, 40, 40, 40,]
     });
     showInventory();
+
+    // grab table from mysql and display to user
+    function showInventory() {
+        connection.query("SELECT * FROM products", function(err, res) {
+            for (var i = 0; i < res.length; i++) {
+                var item_id = res[i].item_id,
+                product_name = res[i].product_name,
+                department_name = res[i].department_name,
+                price = res[i].price,
+                stock_quantity = res[i].stock_quantity;
+
+                table.push([item_id, product_name, department_name, price, stock_quantity]);
+            }
+            console.log("");
+            console.log("====================================================== Current Bamazon Inventory ======================================================");
+            console.log("");
+            console.log(table.toString());
+            console.log("");
+            // continuePrompt();
+        });
+    }
 }
