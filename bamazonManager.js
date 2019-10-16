@@ -70,3 +70,38 @@ function inventory() {
         });
     }
 }
+
+// create function to view low inventory
+function low_inentory() {
+    // use table to show the results on the low inventory
+    var table = new Table({
+        head: ['Id', 'Item', "Department", "Price", "Quantity"],
+        colWidths: [10, 40, 40, 40, 40,]
+    });
+    showLowInventory();
+    // connect to database to pull items that have less than 5 in stock
+function showLowInventory() {
+    connection.query("SELECT * FROM products", function(err, res) {
+        for (var i = 0; i < res.length; i++) {
+            // check for stock below 5
+            if (res[i].stock_quantity < 5) {
+                var item_id = res[i].item_id,
+                product_name = res[i].product_name,
+                department_name = res[i].department_name,
+                price = res[i].price,
+                stock_quantity = res[i].stock_quantity;
+
+                table.push([
+                    item_id, product_name, department_name, price, stock_quantity
+                ]);
+            } 
+        }
+        console.log("");
+        console.log("----------------------------------------Bamazon Low Inventory------------------------------------------");
+        console.log("");
+        console.log(table.toString());
+        console.log("");
+         startPrompt();
+        });
+    }
+}
