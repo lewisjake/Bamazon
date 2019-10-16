@@ -18,6 +18,7 @@ connection.connect(function(err) {
     startPrompt();
 });
 
+// create a function to prompt the manager a list of tasks to perform
 function startPrompt() {
     inquirer.prompt([{
        type: "list",
@@ -35,4 +36,37 @@ function startPrompt() {
             add_product();
         }
     });
+}
+
+// create a function to view the current inventory
+function inventory() {
+    // create table for inventory
+    var table = new Table({
+        head: ['Id', 'Item', "Department", "Price", "Quantity"],
+        colWidths: [10, 40, 40, 40, 40,]
+    });
+    showInventory();
+
+    // grab table from mysql and display to user
+    // after the table is displayed, run a function to see if they would like to
+    // buy anything
+    function showInventory() {
+        connection.query("SELECT * FROM products", function(err, res) {
+            for (var i = 0; i < res.length; i++) {
+                var item_id = res[i].item_id,
+                product_name = res[i].product_name,
+                department_name = res[i].department_name,
+                price = res[i].price,
+                stock_quantity = res[i].stock_quantity;
+
+                table.push([item_id, product_name, department_name, price, stock_quantity]);
+            }
+            console.log("");
+            console.log("----------------------------------------Current Bamazon Inventory ------------------------------------------");
+            console.log("");
+            console.log(table.toString());
+            console.log("");
+             startPrompt();
+        });
+    }
 }
