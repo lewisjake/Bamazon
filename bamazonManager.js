@@ -117,7 +117,16 @@ function add_inventory() {
     {
         type: "input",
         name: "inputNumber",
-        message: "How many units would you like to add to the inventory?",
+        message: "How many units would you like to have in the inventory?",
     }
-    ])
-}
+    ]).then(function(add_stock) {
+        // connect to mysql to update stock
+        connection.query("UPDATE products SET ? WHERE ?", [{
+            stock_quantity: add_stock.inputNumber
+        }, {
+           item_id: add_stock.inputId 
+        }], function(err, res) {
+        });
+        startPrompt();
+    });
+}    
