@@ -105,3 +105,19 @@ function showLowInventory() {
         });
     }
 }
+
+// create function to add stock to the inventory
+function add_inventory() {
+    // prompt user to see which item they would like to add to
+    inquirer.prompt([{
+        type: "input",
+        name: "inputId",
+        message: "Please enter the ID number of the item you would like to add stock to.",
+    },
+    {
+        type: "input",
+        name: "inputNumber",
+        message: "How many units would you like to add to the inventory?",
+    }
+    ])
+}
