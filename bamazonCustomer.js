@@ -145,7 +145,7 @@ function confirmPurchase(updateStock, purchase_id) {
                 startPrompt();
             } else {
                 console.log("--------------------------------------");
-                console.log("Sorry, come back soon.");
+                console.log("Okay, come back soon.");
                 console.log("--------------------------------------");
                 startPrompt();
             }
