@@ -4,7 +4,7 @@ CREATE DATABASE bamazon;
 USE bamazon;
 
 CREATE TABLE products (
-    item_id INT(5) NOT NULL,
+    item_id INT(5) AUTO_INCREMENT NOT NULL,
     product_name VARCHAR(50) NOT NULL,
     department_name VARCHAR (50) NOT NULL,
     price DECIMAL(8,2) NOT NULL,

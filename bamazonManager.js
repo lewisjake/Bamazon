@@ -129,4 +129,41 @@ function add_inventory() {
         });
         startPrompt();
     });
-}    
+}
+
+// create function to add a product to the database
+function add_product() {
+    // manager must fill in the name, department, price, and stock of the new item
+    inquirer.prompt([{
+        type: 'input',
+        name: "inputName",
+        message: "Enter the name of the new product.",
+    },
+    {
+        type: "input",
+        name: "inputDepartment",
+        message: "Which department does this product belong in?",
+    },
+    {
+        type: "input",
+        name: "inputPrice",
+        message: "Set the price of this item.", 
+    },
+    {
+        type: "input",
+        name: "inputStock",
+        message: "How many units would you like in-stock?",
+    }]).then(function(new_product) {
+        // connect to database and add data from manager
+        connection.query("INSERT INTO products SET ?", {
+            product_name: new_product.inputName,
+            department_name: new_product.inputDepartment,
+            price: new_product.inputPrice,
+            stock_quantity: new_product.inputStock
+        }, function(err, res) {
+            if (err) throw err;
+        });
+        console.log("Product added!");
+        startPrompt();
+    });
+}
